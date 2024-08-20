@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import Tictactoe from './Tictactoe'
 
 const SuperTictactoe = ({turn, handleTurn, allowedBoard, storeWinner, tictactoes}) => {
+console.log("🚀 ~ SuperTictactoe ~ allowedBoard:", allowedBoard)
 
-  console.log('eachTTTRendered');
   
   return (
     <div className='super-board'>

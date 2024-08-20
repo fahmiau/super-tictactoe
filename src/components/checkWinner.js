@@ -19,5 +19,9 @@ export function checkWinner(squares) {
     
   }
 
+  if (squares.every(square => square !== null)) {
+    return '=';
+  }
+
   return false;
 }

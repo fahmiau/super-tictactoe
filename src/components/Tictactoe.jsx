@@ -18,7 +18,7 @@ const Tictactoe = ({boardId, turn, handleTurn, storeWinner, allowed}) => {
     if (tempWin) {
       setWinner(tempWin)
       storeWinner(tempWin,boardId);
-      handleTurn(i,tempWin);
+      handleTurn(i,tempWin,boardId);
       setWin(true);
     } else {
       handleTurn(i);
@@ -36,17 +36,14 @@ const Tictactoe = ({boardId, turn, handleTurn, storeWinner, allowed}) => {
     if (win) {
       if (winner === 'X') {
         classNamesTemp = ['overlay-board','text-glow-red'];
-        console.log("🚀 ~ Masuk sini");
       } else {
         classNamesTemp = ['overlay-board','text-glow-blue'];
-        console.log("🚀 ~ Masuk sini satunya lagi");
       }
     }
     setClassNames(classNamesTemp);
   },[win, allowed]);
 
   console.log(boardId," Ttt is rendered",allowed);
- 
   return (
     <>
       <div className={'board s'+boardId} id={boardId}>

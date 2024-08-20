@@ -15,47 +15,47 @@ function App() {
     nextSuperT[i] = winner;
     console.log("🚀 ~ storeWinner ~ nextSuperT:", nextSuperT)
     setTictactoes(nextSuperT);
-    if (checkWinner(nextSuperT)) {
-      
+    let superWinnerTemp = checkWinner(nextSuperT);
+    if (superWinnerTemp) {
+      setSuperWinner(checkWinner(nextSuperT))
     }
   };
 
-  function handleTurn(i,winner) {
+  function handleTurn(i,winner,boardId) {
     console.log('handle turn ',i,winner);
     
     setXisNext(!xIsNext);
     let allowedTemp = [];
     let ticactoeTemp = tictactoes.slice();
     if (winner) {
-      ticactoeTemp[i] = winner;
+      ticactoeTemp[boardId] = winner;
     }
     if (ticactoeTemp[i]) {
       allowedTemp = ticactoeTemp.map((t,index) => {
-        console.log(i, ' udah keisi');
-        
         return (t) ? false : true;
       })
     } else {
       allowedTemp = ticactoeTemp.map((t,index) => {
-        console.log(i, ' belum keisi');
-        
         return (index == i) ? true : false;
       })
     }
     setAllowedBoard(allowedTemp);
     console.log("🚀 ~ handleTurn ~ allowedTemp:", allowedTemp)
   }
-  console.log('superRendered');
 
   useEffect(() => {
     if (superWinner) {
-      
+      let h1winner = document.getElementById('winner-container');
+      h1winner.style.display = 'flex'
     }
   },[superWinner])
   
   return (
     <>
-    {/* <Rules /> */}
+    <Rules />
+    <div id='winner-container' className={'winner '+ ((superWinner == 'X') ? 'text-glow-red' : 'text-glow-blue')}>
+      <h1>Player {superWinner} won the game</h1>
+    </div>
     <h1 className={(xIsNext) ? 'text-glow-red' : 'text-glow-blue'}>Next Player : {(xIsNext) ? 'X' : 'O'}</h1>
     <SuperTictactoe
       turn={xIsNext}
