@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import SuperTictactoe from './components/SuperTictactoe'
 import Rules from './components/Rules'
+import Mode from './components/Mode.jsx'
 import {checkWinner} from './components/checkWinner.js'
 
 function App() {
@@ -9,6 +10,12 @@ function App() {
   const [tictactoes,setTictactoes] = useState(Array(9).fill(null));
   const [allowedBoard,setAllowedBoard] = useState(Array(9).fill(true));
   const [superWinner,setSuperWinner] = useState(false);
+  const [playerMode,setPlayermMode] = useState(1);
+  console.log("🚀 ~ App ~ playerMode:", playerMode)
+
+  // function resetHandle() {
+    
+  // }
 
   const storeWinner = (winner,i) => {
     const nextSuperT = tictactoes.slice();
@@ -22,7 +29,6 @@ function App() {
   };
 
   function handleTurn(i,winner,boardId) {
-    console.log('handle turn ',i,winner);
     
     setXisNext(!xIsNext);
     let allowedTemp = [];
@@ -57,13 +63,19 @@ function App() {
       <h1>Player {superWinner} won the game</h1>
     </div>
     <h1 className={(xIsNext) ? 'text-glow-red' : 'text-glow-blue'}>Next Player : {(xIsNext) ? 'X' : 'O'}</h1>
-    <SuperTictactoe
-      turn={xIsNext}
-      handleTurn={handleTurn}
-      allowedBoard={allowedBoard}
-      storeWinner={storeWinner}
-      tictactoes={tictactoes}
-    />
+    <div className='game-container'>
+      <SuperTictactoe
+        turn={xIsNext}
+        handleTurn={handleTurn}
+        allowedBoard={allowedBoard}
+        storeWinner={storeWinner}
+        tictactoes={tictactoes}
+        />
+      <Mode
+        // reset={() => resetHandle}
+        playerMode={playerMode}
+      />
+    </div>
       {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />

@@ -166,6 +166,39 @@
   text-shadow: 0px 0px 10px #ff647eaa, 0px 0px 20px #ff647eaa, 0px 0px 30px #ff647eaa;
 }
 
+.game-container{
+  display: flex;
+  align-items: center;
+}
+
+.modes-container{
+  width: 150px;
+  margin-left: 2rem;
+  box-shadow: 0px 0px 5px white;
+  border-radius: 1rem;
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  -ms-border-radius: 1rem;
+  -o-border-radius: 1rem;
+}
+
+.mode-container{
+  padding-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.mode-icon{
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  filter: invert(87%) sepia(10%) saturate(0%) hue-rotate(253deg) brightness(93%) contrast(88%);
+  -webkit-filter: invert(87%) sepia(10%) saturate(0%) hue-rotate(253deg) brightness(93%) contrast(88%);
+}
+
+.mode-icon:hover{
+  filter: invert(95%) sepia(59%) saturate(0%) hue-rotate(180deg) brightness(104%) contrast(107%);
+  -webkit-filter: invert(95%) sepia(59%) saturate(0%) hue-rotate(180deg) brightness(104%) contrast(107%);
+}
 /* a {
   font-weight: 500;
   color: #646cff;
