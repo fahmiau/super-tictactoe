@@ -3,11 +3,13 @@ import './App.css'
 import SuperTictactoe from './components/SuperTictactoe'
 import Rules from './components/Rules'
 import Mode from './components/Mode.jsx'
-import {checkWinner} from './components/checkWinner.js'
+import {checkWinner} from './assets/checkWinner.js'
+import Tictactoe from './components/Tictactoe.jsx'
 
 function App() {
   const [xIsNext, setXisNext] = useState(true);
-  const [tictactoes,setTictactoes] = useState(Array(9).fill(null));
+  const [superBoard,setSuperBoard] = useState(Array(9).fill(null));
+  const [boards, setBoards] = useState(Array(9).fill().map(() => Array(9).fill(null)));
   const [allowedBoard,setAllowedBoard] = useState(Array(9).fill(true));
   const [superWinner,setSuperWinner] = useState(false);
   const [playerMode,setPlayermMode] = useState(1);
@@ -17,36 +19,62 @@ function App() {
     
   // }
 
-  const storeWinner = (winner,i) => {
-    const nextSuperT = tictactoes.slice();
-    nextSuperT[i] = winner;
-    console.log("🚀 ~ storeWinner ~ nextSuperT:", nextSuperT)
-    setTictactoes(nextSuperT);
-    let superWinnerTemp = checkWinner(nextSuperT);
-    if (superWinnerTemp) {
-      setSuperWinner(checkWinner(nextSuperT))
-    }
-  };
+  // const storeWinner = (winner,i) => {
+  //   const nextSuperT = tictactoes.slice();
+  //   nextSuperT[i] = winner;
+  //   console.log("🚀 ~ storeWinner ~ nextSuperT:", nextSuperT)
+  //   setTictactoes(nextSuperT);
+  //   let superWinnerTemp = checkWinner(nextSuperT);
+  //   if (superWinnerTemp) {
+  //     setSuperWinner(checkWinner(nextSuperT))
+  //   }
+  // };
 
-  function handleTurn(i,winner,boardId) {
-    
-    setXisNext(!xIsNext);
-    let allowedTemp = [];
-    let ticactoeTemp = tictactoes.slice();
-    if (winner) {
-      ticactoeTemp[boardId] = winner;
+  function handleTurn(boardId,square,winner,boardId) {
+    if (boards[boardId][square] || superBoard[boardId]) return;
+
+    const newBoards = boards.slice().map(board => board.slice());
+    newBoards[boardId][square] = (xIsNext) ? 'X' : 'O';
+    setBoards(newBoards);
+
+    //check board win
+    const boardWin = checkWinner(newBoards[boardId]);
+    let tempSuperBoard = superBoard.slice();
+    if (boardWin) {
+      tempSuperBoard[boardId] = (xIsNext) ? 'X' : 'O';
+      setSuperBoard(tempSuperBoard);
     }
-    if (ticactoeTemp[i]) {
-      allowedTemp = ticactoeTemp.map((t,index) => {
-        return (t) ? false : true;
-      })
+
+    //set allowed board
+    let tempAllowed = [];
+    if (tempSuperBoard[square]) {
+      tempAllowed = tempSuperBoard.map((sb,index) => {
+        return (sb) ? false : true;
+      });
     } else {
-      allowedTemp = ticactoeTemp.map((t,index) => {
-        return (index == i) ? true : false;
+      tempAllowed = tempSuperBoard.map((s,index) => {
+        return (index == square) ? true : false
       })
     }
-    setAllowedBoard(allowedTemp);
-    console.log("🚀 ~ handleTurn ~ allowedTemp:", allowedTemp)
+    setAllowedBoard(tempAllowed);
+    setXisNext(!xIsNext);
+    // setXisNext(!xIsNext);
+    // let allowedTemp = [];
+    // let ticactoeTemp = tictactoes.slice();
+    // if (winner) {
+    //   ticactoeTemp[boardId] = winner;
+    // }
+    // if (ticactoeTemp[i]) {
+    //   allowedTemp = ticactoeTemp.map((t,index) => {
+    //     return (t) ? false : true;
+    //   })
+    // } else {
+    //   allowedTemp = ticactoeTemp.map((t,index) => {
+    //     return (index == i) ? true : false;
+    //   })
+    // }
+    // setAllowedBoard(allowedTemp);
+    // console.log("🚀 ~ handleTurn ~ allowedTemp:", allowedTemp)
   }
 
   useEffect(() => {
@@ -64,40 +92,51 @@ function App() {
     </div>
     <h1 className={(xIsNext) ? 'text-glow-red' : 'text-glow-blue'}>Next Player : {(xIsNext) ? 'X' : 'O'}</h1>
     <div className='game-container'>
-      <SuperTictactoe
-        turn={xIsNext}
-        handleTurn={handleTurn}
-        allowedBoard={allowedBoard}
-        storeWinner={storeWinner}
-        tictactoes={tictactoes}
-        />
+      <div className='super-board'>
+        {
+          tictactoes.map((tictactoe,index) => (
+            <Tictactoe
+              key={index}
+              storeWinner={storeWinner}
+              handleTurn={handleTurn}
+              turn={xIsNext}
+              boardId={index}
+              superT={tictactoe}
+              board={boards[index]}
+              allowed={allowedBoard[index]}
+            />
+          ))
+        }
+      </div>
       <Mode
         // reset={() => resetHandle}
         playerMode={playerMode}
       />
     </div>
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
     </>
   )
+  // return (
+  //   <>
+  //   <Rules />
+  //   <div id='winner-container' className={'winner '+ ((superWinner == 'X') ? 'text-glow-red' : 'text-glow-blue')}>
+  //     <h1>Player {superWinner} won the game</h1>
+  //   </div>
+  //   <h1 className={(xIsNext) ? 'text-glow-red' : 'text-glow-blue'}>Next Player : {(xIsNext) ? 'X' : 'O'}</h1>
+  //   <div className='game-container'>
+  //     <SuperTictactoe
+  //       turn={xIsNext}
+  //       handleTurn={handleTurn}
+  //       allowedBoard={allowedBoard}
+  //       storeWinner={storeWinner}
+  //       tictactoes={tictactoes}
+  //       />
+  //     <Mode
+  //       // reset={() => resetHandle}
+  //       playerMode={playerMode}
+  //     />
+  //   </div>
+  //   </>
+  // )
 }
 
 export default App
